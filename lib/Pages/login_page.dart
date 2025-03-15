@@ -13,7 +13,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> loginUser() async {
-    final url = Uri.parse("http://192.168.76.200:46657/login");
+    final url = Uri.parse("http://192.168.120.200:39723/login");
     // final url = Uri.parse("http://10.0.2.2:5000/login");// for emulator
     final response = await http.post(
       url,

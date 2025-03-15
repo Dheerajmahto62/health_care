@@ -23,7 +23,7 @@ class _DashboardPageState extends State<DashboardPage> {
   List<Map<String, dynamic>> bloodDonors = [];
 
   Future<void> fetchDonors() async {
-    const String apiUrl = 'http://192.168.76.200:46657/donors';
+    const String apiUrl = 'http://192.168.120.200:39723/donors';
     // const String apiUrl = 'http://10.0.2.2:5000/donors';
 
     try {
