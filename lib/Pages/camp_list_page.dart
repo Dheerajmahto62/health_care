@@ -22,7 +22,8 @@ class _CampListPageState extends State<CampListPage> {
 
   Future<void> fetchCamps() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.76.200:45801/camps'));
+      final response = await http.get(Uri.parse('http://192.168.76.200:46657/camps'));
+      // final response = await http.get(Uri.parse('http://10.0.2.2:5000/camps'));// for emulator
 
       if (response.statusCode == 200) {
         setState(() {
