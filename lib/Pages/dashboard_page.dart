@@ -9,6 +9,7 @@ import 'register_history_page.dart';
 import 'checkup_list_page.dart';
 import 'login_page.dart';
 import 'chat_bot_page.dart';
+import 'doctor_appointment_page.dart';
 
 class DashboardPage extends StatefulWidget {
   final String token;
@@ -23,7 +24,7 @@ class _DashboardPageState extends State<DashboardPage> {
   List<Map<String, dynamic>> bloodDonors = [];
 
   Future<void> fetchDonors() async {
-    const String apiUrl = 'http://192.168.120.200:39723/donors';
+    const String apiUrl = 'https://medical-python.vercel.app/donors';
     // const String apiUrl = 'http://10.0.2.2:5000/donors';
 
     try {
@@ -115,6 +116,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
               _buildServiceContainer(context, 'Checkup', Icons.local_hospital,
                       () => Navigator.push(context, MaterialPageRoute(builder: (context) => CheckupListPage()))),
+              _buildServiceContainer(context, 'Doctor Appointment', Icons.local_hospital_outlined,
+                      () => Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorAppointmentPage()))),
               _buildServiceContainer(context, 'Nurse Center', Icons.medical_services,
                       () => Navigator.push(context, MaterialPageRoute(builder: (context) => NurseListPage()))),
             ]),

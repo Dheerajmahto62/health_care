@@ -33,7 +33,7 @@ class _RegisterPageState extends State<RegisterPage> {
       setState(() => isLoading = true);
 
       try {
-        final url = Uri.parse("http://192.168.120.200:39723/register_donor");
+        final url = Uri.parse("https://medical-python.vercel.app/register_donor");
         // final url = Uri.parse("http://10.0.2.2:5000/register_donor");// for emulator
         final response = await http.post(
           url,

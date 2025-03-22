@@ -7,17 +7,25 @@ class BloodDonorListPage extends StatelessWidget {
 
   BloodDonorListPage({required this.donors});
 
-  void _callDonor(String contact) async {
-    final Uri url = Uri.parse("tel:$contact");
+  // Function to call a donor
+  Future<void> _callDonor(String contact) async {
+    final Uri url = Uri(scheme: "tel", path: contact);
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
+    } else {
+      print("Could not launch call: $url");
     }
   }
 
-  void _whatsappDonor(String contact) async {
-    final Uri url = Uri.parse("https://wa.me/$contact");
+  // Function to open WhatsApp chat
+  Future<void> _whatsappDonor(String contact) async {
+    String phoneNumber = contact.replaceAll(" ", "").replaceAll("+", "");
+    final Uri url = Uri.parse("https://wa.me/$phoneNumber");
+
     if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      print("Could not launch WhatsApp: $url");
     }
   }
 
@@ -29,11 +37,15 @@ class BloodDonorListPage extends StatelessWidget {
         itemCount: donors.length,
         itemBuilder: (context, index) {
           final donor = donors[index];
+          String imagePath = donor["image"] ?? "assets/images/user1.jpeg"; // Default image if none provided
+
           return Card(
             margin: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("assets/images/user1.jpeg"), // Add an image to assets
+                backgroundImage: imagePath.startsWith("http")
+                    ? NetworkImage(imagePath) // For online images
+                    : AssetImage(imagePath) as ImageProvider, // For local assets
                 backgroundColor: Colors.red.shade200,
               ),
               title: Text(donor["name"] ?? "Unknown"),
@@ -46,7 +58,7 @@ class BloodDonorListPage extends StatelessWidget {
                     onPressed: () => _callDonor(donor["contact"] ?? ""),
                   ),
                   IconButton(
-                    icon: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green), // WhatsApp icon
+                    icon: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green),
                     onPressed: () => _whatsappDonor(donor["contact"] ?? ""),
                   ),
                 ],
