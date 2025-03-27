@@ -23,6 +23,7 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  int rewardCoins = 0;
   List<Map<String, dynamic>> bloodDonors = [];
 
   Future<void> fetchDonors() async {
@@ -43,6 +44,16 @@ class _DashboardPageState extends State<DashboardPage> {
     } catch (e) {
       print("Error fetching donors: \$e");
     }
+  }
+  void _donateBlood() {
+    setState(() {
+      rewardCoins += 10; // Add 10 coins per donation
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Thank you for donating! You've earned 10 coins."),
+      ),
+    );
   }
 
   @override
@@ -70,7 +81,19 @@ class _DashboardPageState extends State<DashboardPage> {
           icon: Icon(Icons.menu),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
-        actions: [IconButton(icon: Icon(Icons.logout), onPressed: _logout)],
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: Row(
+              children: [
+                Icon(Icons.monetization_on, color: Colors.red ),
+                SizedBox(width: 5),
+                Text('$rewardCoins', style: TextStyle(color: Colors.black)),
+              ],
+            ),
+          ),
+        ],
+
       ),
       drawer: _buildDrawer(),
       floatingActionButton: FloatingActionButton(
@@ -152,6 +175,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                     ),
                   ),
+
                   _buildServiceContainer(
                     context,
                     'Doctor Appointment',

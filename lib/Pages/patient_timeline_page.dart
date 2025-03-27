@@ -5,7 +5,7 @@ class PatientHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Patient Timeline for Medicine Doses"),
+        title: Text("Medicine Doses"),
         backgroundColor: Colors.red,
       ),
       body: Padding(

@@ -32,7 +32,7 @@ class _NearbyShopsPageState extends State<NearbyShopsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Nearby Medical Shops")),
+      appBar: AppBar(title: Text("Medical Shops")),
       body: GoogleMap(
         onMapCreated: _onMapCreated,
         initialCameraPosition: CameraPosition(
