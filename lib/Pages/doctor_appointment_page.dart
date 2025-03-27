@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class DoctorAppointmentPage extends StatefulWidget {
   @override
@@ -17,7 +18,9 @@ class _DoctorAppointmentPageState extends State<DoctorAppointmentPage> {
   File? _document;
 
   Future<void> _pickDocument() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     if (pickedFile != null) {
       setState(() {
         _document = File(pickedFile.path);
@@ -35,7 +38,8 @@ class _DoctorAppointmentPageState extends State<DoctorAppointmentPage> {
 
     if (pickedDate != null) {
       setState(() {
-        _dateController.text = "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+        _dateController.text =
+            "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
       });
     }
   }
@@ -133,7 +137,9 @@ class _DoctorAppointmentPageState extends State<DoctorAppointmentPage> {
                   decoration: InputDecoration(labelText: "Medication Details"),
                 ),
                 SizedBox(height: 10),
-                _document == null ? Text("No document selected") : Text("Document selected"),
+                _document == null
+                    ? Text("No document selected")
+                    : Text("Document selected"),
                 ElevatedButton(
                   onPressed: _pickDocument,
                   child: Text("Upload Document"),
