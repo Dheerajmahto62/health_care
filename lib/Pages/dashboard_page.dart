@@ -12,6 +12,7 @@ import 'login_page.dart';
 import 'nearby_shops_page.dart';
 import 'nurse_list_page.dart';
 import 'patient_timeline_page.dart';
+import 'health_monitoring_page.dart';
 
 class DashboardPage extends StatefulWidget {
   final String token;
@@ -93,6 +94,7 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ),
         ],
+
 
       ),
       drawer: _buildDrawer(),
@@ -229,6 +231,17 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                     ),
                   ),
+              _buildServiceContainer(
+                context,
+                'Health Monitoring',
+                Icons.monitor_heart,
+                    () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HealthMonitoringPage(),
+                  ),
+                ),
+              )
                 ],
               ),
             ),
