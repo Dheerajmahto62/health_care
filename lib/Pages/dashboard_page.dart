@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'nurse_list_page.dart';
 import 'blood_donor_page.dart';
-import 'camping_people_list.dart';
 import 'document_verification_page.dart';
-import 'register_history_page.dart';
 import 'checkup_list_page.dart';
 import 'login_page.dart';
 import 'chat_bot_page.dart';
 import 'doctor_appointment_page.dart';
+import 'patient_timeline_page.dart';
+import 'nearby_shops_page.dart';
 
 class DashboardPage extends StatefulWidget {
   final String token;
@@ -25,7 +25,6 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Future<void> fetchDonors() async {
     const String apiUrl = 'https://medical-python.vercel.app/donors';
-    // const String apiUrl = 'http://10.0.2.2:5000/donors';
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -35,7 +34,6 @@ class _DashboardPageState extends State<DashboardPage> {
         setState(() {
           bloodDonors = donors.map((donor) => donor as Map<String, dynamic>).toList();
         });
-        print("Fetched Donors: \$bloodDonors"); // Debugging log
       } else {
         print('Failed to fetch donors. Status Code: \${response.statusCode}');
       }
@@ -85,51 +83,64 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Icon(Icons.chat, color: Colors.red),
         backgroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
+        padding: EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeaderImage(),
-            _buildSectionTitle("Services", Colors.red),
-            _buildHorizontalScrollView([
-              _buildServiceContainer(
-                context,
-                'Blood Donor',
-                Icons.bloodtype,
-                    () {
-                  if (bloodDonors.isNotEmpty) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BloodDonorListPage(
-                          donors: bloodDonors.map((donor) => donor.map((key, value) => MapEntry(key, value.toString()))).toList(),
-                        ),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("No blood donors available. Please try again later.")),
-                    );
-                  }
-                },
+            Text(
+              "Service",
+              style: TextStyle(
+                fontSize: 20, // Increased font size
+                fontWeight: FontWeight.bold,
+                color: Colors.red, // Set text color to red
               ),
+            ),
 
-              _buildServiceContainer(context, 'Checkup', Icons.local_hospital,
-                      () => Navigator.push(context, MaterialPageRoute(builder: (context) => CheckupListPage()))),
-              _buildServiceContainer(context, 'Doctor Appointment', Icons.local_hospital_outlined,
-                      () => Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorAppointmentPage()))),
-              _buildServiceContainer(context, 'Nurse Center', Icons.medical_services,
-                      () => Navigator.push(context, MaterialPageRoute(builder: (context) => NurseListPage()))),
-            ]),
-            _buildSectionTitle("Details", Colors.red),
-            _buildHorizontalScrollView([
-              _buildServiceContainer(context, 'Camping People', Icons.group,
-                      () => Navigator.push(context, MaterialPageRoute(builder: (context) => CampingPeopleListPage()))),
-              _buildServiceContainer(context, 'Documentation', Icons.assignment,
-                      () => Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentVerificationPage()))),
-              _buildServiceContainer(context, 'Register History', Icons.history,
-                      () => Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterHistoryPage()))),
-            ]),
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 3, // 3 columns
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+
+                children: [
+                  _buildServiceContainer(
+                    context,
+                    'Blood Donor',
+                    Icons.bloodtype,
+                        () {
+                      if (bloodDonors.isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BloodDonorListPage(
+                              donors: bloodDonors.map((donor) => donor.map((key, value) => MapEntry(key, value.toString()))).toList(),
+                            ),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("No blood donors available. Please try again later.")),
+                        );
+                      }
+                    },
+                  ),
+                  _buildServiceContainer(context, 'Checkup', Icons.local_hospital,
+                          () => Navigator.push(context, MaterialPageRoute(builder: (context) => CheckupListPage()))),
+                  _buildServiceContainer(context, 'Doctor Appointment', Icons.local_hospital_outlined,
+                          () => Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorAppointmentPage()))),
+                  _buildServiceContainer(context, 'Nurse Center', Icons.medical_services,
+                          () => Navigator.push(context, MaterialPageRoute(builder: (context) => NurseListPage()))),
+                  _buildServiceContainer(context, 'Medical Shops', Icons.store,
+                          () => Navigator.push(context, MaterialPageRoute(builder: (context) => NearbyShopsPage()))),
+                  _buildServiceContainer(context, 'Documentation', Icons.assignment,
+                          () => Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentVerificationPage()))),
+                  _buildServiceContainer(context, 'Patient Timeline', Icons.timeline,
+                          () => Navigator.push(context, MaterialPageRoute(builder: (context) => PatientHistoryPage()))),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -179,46 +190,29 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildSectionTitle(String title, Color color) {
-    return Padding(
-      padding: EdgeInsets.all(12.0),
-      child: Text(title,
-          style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold, color: color)),
-    );
-  }
-
-  Widget _buildHorizontalScrollView(List<Widget> children) {
-    return Container(
-      height: 100,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: children,
-      ),
-    );
-  }
-
   Widget _buildServiceContainer(BuildContext context, String title, IconData icon, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 100,
-        margin: EdgeInsets.symmetric(horizontal: 10.0),
         padding: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(500),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white,
+              blurRadius: 5,
+              spreadRadius: 2,
+            ),
+          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 30, color: Colors.red),
             SizedBox(height: 5),
-            Text(title,
-                style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red.shade900)),
+            Text(title, textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.red.shade900)),
           ],
         ),
       ),

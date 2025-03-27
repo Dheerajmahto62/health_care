@@ -12,9 +12,12 @@ class DoctorAppointmentPage extends StatefulWidget {
 class _DoctorAppointmentPageState extends State<DoctorAppointmentPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _nameController = TextEditingController();
+  TextEditingController _doctorController = TextEditingController();
+  TextEditingController _insuranceController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
   TextEditingController _medicationController = TextEditingController();
+  String? _selectedNeed;
   File? _document;
 
   Future<void> _pickDocument() async {
@@ -39,7 +42,7 @@ class _DoctorAppointmentPageState extends State<DoctorAppointmentPage> {
     if (pickedDate != null) {
       setState(() {
         _dateController.text =
-            "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+        "\${pickedDate.day}/\${pickedDate.month}/\${pickedDate.year}";
       });
     }
   }
@@ -52,7 +55,7 @@ class _DoctorAppointmentPageState extends State<DoctorAppointmentPage> {
 
     if (pickedTime != null) {
       setState(() {
-        _timeController.text = "${pickedTime.hour}:${pickedTime.minute}";
+        _timeController.text = "\${pickedTime.hour}:\${pickedTime.minute}";
       });
     }
   }
@@ -65,9 +68,12 @@ class _DoctorAppointmentPageState extends State<DoctorAppointmentPage> {
       );
 
       request.fields['name'] = _nameController.text;
+      request.fields['doctor'] = _doctorController.text;
+      request.fields['insurance'] = _insuranceController.text;
       request.fields['date'] = _dateController.text;
       request.fields['time'] = _timeController.text;
       request.fields['medication_details'] = _medicationController.text;
+      request.fields['needs'] = _selectedNeed ?? '';
 
       if (_document != null) {
         request.files.add(
@@ -111,6 +117,41 @@ class _DoctorAppointmentPageState extends State<DoctorAppointmentPage> {
                   },
                 ),
                 TextFormField(
+                  controller: _doctorController,
+                  decoration: InputDecoration(labelText: "Doctor's Name"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter the doctor's name";
+                    }
+                    return null;
+                  },
+                ),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(labelText: "Identify Your Needs"),
+                  value: _selectedNeed,
+                  items: ["Checkup", "Specialist", "Emergency"].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedNeed = newValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please specify your need';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _insuranceController,
+                  decoration: InputDecoration(labelText: "Insurance Details"),
+                ),
+                TextFormField(
                   controller: _dateController,
                   decoration: InputDecoration(
                     labelText: "Appointment Date",
@@ -137,13 +178,6 @@ class _DoctorAppointmentPageState extends State<DoctorAppointmentPage> {
                   decoration: InputDecoration(labelText: "Medication Details"),
                 ),
                 SizedBox(height: 10),
-                _document == null
-                    ? Text("No document selected")
-                    : Text("Document selected"),
-                ElevatedButton(
-                  onPressed: _pickDocument,
-                  child: Text("Upload Document"),
-                ),
                 SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
