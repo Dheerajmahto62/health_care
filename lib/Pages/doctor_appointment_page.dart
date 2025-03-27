@@ -42,7 +42,7 @@ class _DoctorAppointmentPageState extends State<DoctorAppointmentPage> {
     if (pickedDate != null) {
       setState(() {
         _dateController.text =
-        "\${pickedDate.day}/\${pickedDate.month}/\${pickedDate.year}";
+            "\${pickedDate.day}/\${pickedDate.month}/\${pickedDate.year}";
       });
     }
   }
@@ -129,12 +129,15 @@ class _DoctorAppointmentPageState extends State<DoctorAppointmentPage> {
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(labelText: "Identify Your Needs"),
                   value: _selectedNeed,
-                  items: ["Checkup", "Specialist", "Emergency"].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+                  items:
+                      ["Checkup", "Specialist", "Emergency"].map((
+                        String value,
+                      ) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
                   onChanged: (newValue) {
                     setState(() {
                       _selectedNeed = newValue;

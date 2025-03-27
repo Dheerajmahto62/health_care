@@ -114,14 +114,26 @@ class _NurseCardState extends State<NurseCard> {
                     backgroundColor: Colors.blueAccent,
                     child: Text(
                       widget.nurse.fullName[0],
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.nurse.fullName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      Text(widget.nurse.qualification, style: const TextStyle(color: Colors.grey)),
+                      Text(
+                        widget.nurse.fullName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        widget.nurse.qualification,
+                        style: const TextStyle(color: Colors.grey),
+                      ),
                     ],
                   ),
                   IconButton(
@@ -129,7 +141,7 @@ class _NurseCardState extends State<NurseCard> {
                     onPressed: () {
                       // Implement call functionality
                     },
-                  )
+                  ),
                 ],
               ),
               if (_isExpanded) ...[
@@ -149,7 +161,7 @@ class _NurseCardState extends State<NurseCard> {
                     ],
                   ),
                 ),
-              ]
+              ],
             ],
           ),
         ),
